@@ -10,7 +10,6 @@ from typing import Annotated, Literal
 from fastapi import APIRouter, Depends, Response, status
 from pydantic import BaseModel
 from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import Settings, get_settings
@@ -54,8 +53,20 @@ async def readyz(
     """Readiness. Takes the instance out of rotation when Postgres is unreachable."""
     try:
         await session.execute(text("SELECT 1"))
-    except SQLAlchemyError as exc:
-        log.warning("readiness_check_failed", error=str(exc))
+    except Exception as exc:  # noqa: BLE001
+        # Deliberately broad, and the one place in the codebase where that is
+        # correct: every failure means "not ready", and a readiness probe that
+        # raises returns 500, which reports a healthy-but-unready instance as a
+        # crashing one.
+        #
+        # Narrowing this to SQLAlchemyError does not work. SQLAlchemy only wraps
+        # driver errors once a connection exists and a statement is executing;
+        # failures during pool checkout and pre-ping happen below that layer and
+        # arrive raw. Observed with Postgres stopped: a builtin ConnectionError
+        # ("unexpected connection_lost() call") and asyncpg's
+        # CannotConnectNowError ("the database system is starting up") — neither
+        # of them a SQLAlchemyError.
+        log.warning("readiness_check_failed", error=str(exc), error_type=type(exc).__name__)
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
         return ReadyResponse(status="degraded", database="down")
 
