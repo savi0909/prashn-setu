@@ -1,0 +1,112 @@
+[project]
+name = "prashn-setu-backend"
+version = "0.1.0"
+description = "Prashn Setu — objective question paper portal, backend"
+requires-python = "==3.12.*"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "structlog>=24.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.28.0",
+    "testcontainers>=4.9.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+# ---------------------------------------------------------------- ruff
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["."]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",   # pycodestyle
+    "F",        # pyflakes
+    "I",        # isort
+    "N",        # pep8-naming
+    "UP",       # pyupgrade
+    "B",        # bugbear
+    "A",        # builtins shadowing
+    "C4",       # comprehensions
+    "SIM",      # simplify
+    "TID",      # tidy imports
+    "RUF",      # ruff-specific
+    "ASYNC",    # async correctness
+    "E722",     # bare except — §16.2: every except names its type
+    "BLE",      # blind except
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Alembic revisions are generated; their module-level names are fixed by the tool.
+"alembic/versions/*" = ["N999", "E501"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "tests"]
+# `backend/alembic/` is the migrations directory, not our package. Without this,
+# src-based detection sees the directory and files `from alembic import op` as
+# first-party.
+known-third-party = ["alembic"]
+
+# ---------------------------------------------------------------- mypy
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_reexport = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+
+# §16.2: --strict is enforced on domain/, services/, repositories/ and
+# aspirational elsewhere. These packages do not exist yet; the sections are
+# here so the first file added to them is strict from its first commit.
+[[tool.mypy.overrides]]
+module = ["app.domain.*", "app.services.*", "app.repositories.*"]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["alembic.*", "testcontainers.*"]
+ignore_errors = true
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------- pytest
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+# Both scopes must be "session" and must match. The engine in
+# tests/integration/conftest.py is session-scoped and pools asyncpg connections;
+# a per-test event loop would hand test N a connection bound to test N-1's
+# closed loop, which surfaces as "Event loop is closed" deep inside asyncpg.
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+addopts = "-q --strict-markers"
+markers = [
+    "integration: requires a real Postgres (spun up via testcontainers)",
+]

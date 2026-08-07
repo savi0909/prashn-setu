@@ -1,0 +1,8 @@
+#!/bin/sh
+# Delegates to the developer's global pre-push (this repo adds none of its own).
+# Note: git feeds the pushed refs on stdin. The global hook receives that stream
+# untouched because nothing here reads it.
+set -e
+. "$(dirname "$0")/_chain.sh"
+
+run_global_hook pre-push "$@"

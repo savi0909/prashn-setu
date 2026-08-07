@@ -1,0 +1,25 @@
+# Line endings are LF in the repository and LF in the working tree, on every
+# platform. Without this, a Windows checkout with core.autocrlf=true fights the
+# `mixed-line-ending --fix=lf` pre-commit hook: the hook rewrites files to LF,
+# git rewrites them back to CRLF, and every commit carries whole-file noise.
+# This file wins over core.autocrlf, so the two stop disagreeing.
+* text=auto eol=lf
+
+# Windows-only scripts must keep CRLF or cmd.exe mis-parses them.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Never touched.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary
+
+# Generated — collapse in review, but still diffable on request.
+openapi.json     linguist-generated=true
+backend/uv.lock  linguist-generated=true

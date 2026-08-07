@@ -1,0 +1,70 @@
+name: prashn-setu
+
+# Published ports are deliberately NOT the conventional ones. A developer with a
+# native PostgreSQL service, another project's Redis, or anything on 9000 would
+# otherwise get a silent collision: on Windows both listeners bind successfully
+# and the host connection reaches the wrong server, surfacing as an
+# authentication failure against a database that looks like it should work.
+# Container-to-container traffic still uses the standard ports.
+
+services:
+  postgres:
+    # pgvector's image is the official postgres image plus the vector extension,
+    # so ltree and pgcrypto (postgresql-contrib) are present too. All three are
+    # enabled by Alembic revision 0001 — see backend/alembic/versions/.
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: prashn
+      POSTGRES_PASSWORD: prashn
+      POSTGRES_DB: prashn_setu
+      # Deterministic collation. Postgres index ordering depends on it, and a
+      # mismatch between dev and prod silently corrupts index-ordered results.
+      POSTGRES_INITDB_ARGS: "--locale=C.UTF-8 --encoding=UTF8"
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prashn -d prashn_setu"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    # Celery broker + rate-limit counters. Not used until M2/M6, but the
+    # compose file is the environment contract; add it once.
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "56379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    # S3-compatible object storage: branding logos, question diagrams, rendered
+    # PDFs. Used from M3 onward; present now so `make up` matches Appendix E.
+    image: minio/minio:latest
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: prashn
+      MINIO_ROOT_PASSWORD: prashn-dev-secret
+    ports:
+      - "59000:9000"   # S3 API
+      - "59001:9001"   # web console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

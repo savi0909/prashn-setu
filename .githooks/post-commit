@@ -1,0 +1,6 @@
+#!/bin/sh
+# Delegates to the developer's global post-commit (this repo adds none of its own).
+set -e
+. "$(dirname "$0")/_chain.sh"
+
+run_global_hook post-commit "$@"

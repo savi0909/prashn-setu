@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+. "$(dirname "$0")/_chain.sh"
+
+run_global_hook pre-commit "$@"
+
+# `pre-commit run` with no arguments checks the staged files only, which is the
+# correct scope for a pre-commit hook. Use `make hooks` for the whole tree.
+exec uv run --project backend pre-commit run

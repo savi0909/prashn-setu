@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_FROZEN: "1"
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Lint
+        run: |
+          uv run ruff check --output-format=github .
+          uv run ruff format --check .
+
+      - name: Type check
+        run: uv run mypy app
+
+      - name: Unit tests
+        run: uv run pytest tests/unit
+
+      # Integration tests bring their own Postgres via testcontainers, using the
+      # Docker daemon already present on the runner. No service container here —
+      # keeping one code path means local and CI cannot drift.
+      - name: Integration tests
+        run: uv run pytest tests/integration
+
+      - name: Migrations round-trip (head -> base -> head)
+        run: uv run pytest tests/integration -k migrations_are_reversible
+
+      # Appendix E: `make openapi` regenerates the contract and CI fails if the
+      # diff is non-empty. A route change that forgets to regenerate is caught
+      # here rather than by the generated TS client at runtime.
+      - name: OpenAPI contract is committed and current
+        run: |
+          uv run python -m app.scripts.dump_openapi
+          git diff --exit-code -- ../openapi.json
