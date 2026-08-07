@@ -57,6 +57,10 @@ dev: ## Run the API with reload
 
 # ---------------------------------------------------------------- database
 
+.PHONY: health
+health: ## Probe the health endpoints of a running API (make health url=http://host:8000)
+	sh scripts/health-check.sh $(url)
+
 .PHONY: migrate
 migrate: ## Apply migrations to head
 	$(UV) run alembic upgrade head
