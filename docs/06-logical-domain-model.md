@@ -118,6 +118,39 @@ absence rather than as two distinct unknowns, or the same paper ingests twice.
 | **Question Source** | Provenance — where this question or its answer came from, and what that source asserts the answer is | belongs to a **Question** |
 | **Question Review** | A verification or correction event, with old value, new value and rationale. This *is* the revision history; there is no separate version entity | belongs to a **Question** |
 
+### Question identity — deduplication is scoped per examination
+
+A question carries no examination and no session. But identical content is not
+treated identically everywhere:
+
+- **Within one examination, never duplicate.** Ingesting MPBSE 2019 and MPBSE
+  2023 that share a question yields **one** question and **two** appearances.
+  That is what makes frequency countable, and frequency is what prediction runs
+  on.
+- **Across examinations, a duplicate is tolerated.** MPBSE and JEE may each end
+  up with their own copy of "the SI unit of force". Sharing one question between
+  them is allowed and preferred; it is not required.
+
+**The rule lives at ingestion, not in the schema.** There is no examination
+column on a question and no global uniqueness constraint — either would forbid
+the cross-examination copy. Before creating a question for an examination, the
+pipeline checks whether one already covers that examination and reuses it if so.
+
+**Why this is coherent.** Prediction, weightage and the exposure ledger are all
+*per examination* already. A question's frequency in MPBSE is a fact about
+MPBSE; JEE's copy neither adds to it nor subtracts from it.
+
+**Two costs, accepted:**
+
+1. **Verification is paid twice** when the same content is verified separately
+   in two examination corpora. Mitigable later by linking known-identical
+   questions, which nothing requires yet.
+2. **Cross-examination repeats are invisible.** A coaching institute running both
+   an MPBSE batch and a JEE batch — common in MP, and Anil's exact shape — could
+   serve both copies to the same students. The exposure ledger is keyed by
+   examination, so it will not see it. Whether that matters is a product
+   question, recorded in §6.
+
 ### 2.4 Tenant and usage
 
 | Entity | Is | Key relationships |
@@ -305,53 +338,52 @@ Terms to use consistently, in code and in the UI.
 
 ## 6. Open — must be settled before this document reaches 1.0
 
-**The blocking one.**
-
-1. **Does one distinct question exist exactly once in the corpus?** Corpus
-   ownership means "the SI unit of force" is stored once and reached from many
-   examinations — that is the whole point of §0. But if identical questions may
-   also be stored more than once, then counting appearances, measuring sibling
-   overlap, and the exposure ledger all break, because each keys on a single
-   question identity. **These are two different readings of "questions can be
-   duplicated" and they lead to different systems.** Nothing else can be settled
-   until this is.
-
 **Knowledge representation.**
 
-2. **Is there a Concept layer above Question?** The proposal is Subject → Concept
+1. **Is there a Concept layer above Question?** The proposal is Subject → Concept
    → Question, with concepts stable across boards and sessions. Nothing is
    designed. It would make cross-board reuse explicit rather than implicit via
    syllabus mappings — at the cost of a second taxonomy to maintain.
-3. **Is a syllabus tree per session, or shared with aliases?** Document 2 §4.3.5
+2. **Is a syllabus tree per session, or shared with aliases?** Document 2 §4.3.5
    says MPSOS should reference MPBSE's tree "via a `syllabus_alias` rather than
    duplicating nodes". That mechanism is undefined and contradicts one tree per
    session. The same tension appears between examination stages that genuinely
    share a syllabus.
-4. **Difficulty and Bloom level** — derived per question, or carried on the
+3. **Difficulty and Bloom level** — derived per question, or carried on the
    concept? Affects whether difficulty is a distribution to reproduce or an
    attribute to filter on.
 
 **Examination lifecycle.**
 
-5. **What exactly is a future session before it exists?** A prediction target
+4. **What exactly is a future session before it exists?** A prediction target
    with a pattern and a syllabus but no papers. How it is created, and by whom.
-6. **Practical and internal-assessment marks.** MPBSE splits 80+20 (or 75+25);
+5. **Practical and internal-assessment marks.** MPBSE splits 80+20 (or 75+25);
    we serve only the objective block. Whether the pattern records the full paper
    or only the part we generate.
-7. **Do examination stages share anything?** Two independent examinations, or a
+6. **Do examination stages share anything?** Two independent examinations, or a
    parent with stages. Stated as independent, but which pair was meant —
    Main → Advanced, or Session 1 → Session 2 — was never confirmed.
 
 **Forms and pricing.**
 
-8. **Does each form independently satisfy the pattern's mark total?** It should,
+7. **Does each form independently satisfy the pattern's mark total?** It should,
    but that means tail questions must be matched on marks as well as on topic
    and difficulty, which constrains the solver further.
-9. **One credit per form, or per test?** Per form prices the anti-copying
+8. **One credit per form, or per test?** Per form prices the anti-copying
    feature at 3×, which may suppress use of the feature that exists to prevent
    copying.
-10. **Is 900 questions per (examination, subject) still the right target** given
+9. **Is 900 questions per (examination, subject) still the right target** given
     organization-wide reuse? See §4a. Content-operations decision, needs an owner.
+10. **Does a cross-examination repeat matter?** Deduplication is per examination
+    (§2.3), so MPBSE and JEE may hold their own copy of one question and the
+    exposure ledger — keyed by examination — will not notice when an institute
+    running both batches serves both copies to the same students. Anil's shape
+    exactly. Accept it, or link known-identical questions across corpora.
+
+### Resolved
+
+- **Question identity** — deduplicate within an examination, tolerate duplicates
+  across examinations, enforce at ingestion rather than in the schema. See §2.3.
 
 ### Resolved by the design note in `docs/design/`
 
