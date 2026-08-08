@@ -24,7 +24,7 @@ of student. This is the asset. It is what takes eighteen months to build and wha
 | Database | PostgreSQL + pgvector | PG 16, pgvector 0.8+ |
 | Object storage | S3-compatible (E2E object store / MinIO) | — |
 | LLM serving | vLLM | latest stable |
-| Models | Sarvam-30B (default), Sarvam-105B (hard tasks) | see §9.1 |
+| Models | Gemma 4 31B Instruct (all tasks), Gemma 4 12B (cross-check solver) | see 4 §9.1 |
 | PDF generation | Typst (primary), XeLaTeX (fallback) | see §12.2 |
 | DOCX export | python-docx + custom OMML writer | — |
 | Comms | MSG91 (SMS, email, OTP widget) | API v5 |
@@ -39,11 +39,21 @@ Repository layout
 
 ```
 prashn-setu/
-├── CLAUDE.md                       # short: stack, layout, conventions, pointer to this doc
+├── CLAUDE.md                       # short: stack, layout, conventions, pointer to docs/
 ├── docs/
-│   ├── IMPLEMENTATION_PLAN.md      # this file
+│   ├── 00-README.md                # start here — map of the five-document set
+│   ├── 01-problem-actors-usecases.md   # §0–1, §6.0, §15.4, §17–19
+│   ├── 02-examinations-and-syllabus.md # §3–4, §10.4, App. B–C
+│   ├── 03-technical.md             # §2, §5–8, §13–16, App. D–G
+│   ├── 04-question-bank-agent.md   # §5.17, §9, §10.1–10.2, §10.5, §11
+│   ├── 05-exam-creator-agent.md    # §10.3, §12
 │   ├── adr/                        # architecture decision records, one per DEC-nn
 │   └── runbooks/
+├── shared/
+│   └── domain/                     # machine-readable domain knowledge base (ADR 0002).
+│                                   #   Master for subjects and class levels; also the
+│                                   #   seed source. docs/domain-model.md is generated
+│                                   #   from it — never hand-edited.
 ├── docker-compose.yml
 ├── Makefile                        # make dev / test / lint / seed / migrate
 │

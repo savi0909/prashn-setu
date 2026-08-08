@@ -2,8 +2,15 @@
 
 - **Status:** Accepted
 - **Date:** 2026-08-07
-- **Resolves:** DEC-18
+- **Resolves:** DEC-20 (document 1, §17)
 - **Supersedes:** the milestone sequence in §15.4 for M1–M4 only
+
+> **Renumbered 2026-08-08.** This ADR originally read "Resolves: DEC-18",
+> referring to the decision log in `docs/IMPLEMENTATION_PLAN.md` — the v1.0
+> combined document, since deleted. In the authoritative log (document 1, §17)
+> DEC-18 is DeepMindSecure.AI due diligence, an unrelated open question. The
+> corpus-first decision is DEC-20 there. Section references below point at the
+> five-document set. See ADR 0002.
 
 ## Context
 
