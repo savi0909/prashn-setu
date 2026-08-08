@@ -14,6 +14,7 @@ Owner: Pratibha Mandir. Implementing engineer: Abhishek Mittal.
 | 3 | [`03-technical.md`](03-technical.md) | Database schema, APIs, web pages, notifications, payments, testing, infrastructure | ~2290 |
 | 4 | [`04-question-bank-agent.md`](04-question-bank-agent.md) | How the corpus is generated, verified without an answer key, made bilingual, and explained three ways | ~750 |
 | 5 | [`05-exam-creator-agent.md`](05-exam-creator-agent.md) | How a teacher's request becomes a printable branded paper with an OMR sheet | ~280 |
+| 6 | [`06-logical-domain-model.md`](06-logical-domain-model.md) | **DRAFT.** What entities exist and how they relate, without SQL. Implementation is frozen until this reaches v1.0 | ~250 |
 
 ## Cross-references
 

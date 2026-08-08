@@ -1,3 +1,18 @@
+> ## ⚠️ IMPLEMENTATION FROZEN (8 Aug 2026)
+>
+> **No DDL, no Alembic migrations, no ORM models, no seed loaders** until the
+> product design is finalized and `docs/06-logical-domain-model.md` reaches
+> version 1.0. Six open questions are listed in its §6.
+>
+> The domain model was reopened mid-build: questions are corpus-owned rather
+> than examination-owned, past papers are the gold master rather than the
+> syllabus, and the paper-pattern shape changed once MPBSE became the POC
+> examination. Building `syllabus_nodes` or `questions` before that settles
+> means migrating real data later.
+>
+> Design work, the logical model, and the domain knowledge base in
+> `shared/domain/` remain in scope.
+
 What we are building
 
 A corpus or knowledge repository of questions. The largest bank of original, verified, bilingual objective questions for Indian school and competitive examinations,
