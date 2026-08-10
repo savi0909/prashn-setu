@@ -121,9 +121,9 @@ def test_subject_hierarchy_is_at_most_one_level_deep() -> None:
     for subject in _subjects():
         if subject.parent is None:
             continue
-        assert (
-            by_code[subject.parent].parent is None
-        ), f"{subject.code} -> {subject.parent} -> {by_code[subject.parent].parent}"
+        assert by_code[subject.parent].parent is None, (
+            f"{subject.code} -> {subject.parent} -> {by_code[subject.parent].parent}"
+        )
 
 
 def test_a_child_subject_shares_its_parents_stream() -> None:
@@ -139,6 +139,6 @@ def test_a_child_subject_shares_its_parents_stream() -> None:
         if subject.parent is None:
             continue
         parent = by_code[subject.parent]
-        assert (
-            subject.stream == parent.stream
-        ), f"{subject.code} is {subject.stream} but parent {parent.code} is {parent.stream}"
+        assert subject.stream == parent.stream, (
+            f"{subject.code} is {subject.stream} but parent {parent.code} is {parent.stream}"
+        )
