@@ -2071,11 +2071,22 @@ E2E Networks is an Indian, NSE-listed provider with data centres in Indian regio
 
 ```
 prashn-setu/
-├── CLAUDE.md                       # short: stack, layout, conventions, pointer to this doc
+├── CLAUDE.md                       # short: stack, layout, conventions, pointer to docs/
 ├── docs/
-│   ├── IMPLEMENTATION_PLAN.md      # this file
+│   ├── 00-README.md                # start here — map of the five-document set
+│   ├── 01-problem-actors-usecases.md
+│   ├── 02-examinations-and-syllabus.md
+│   ├── 03-technical.md             # this file
+│   ├── 04-question-bank-agent.md
+│   ├── 05-exam-creator-agent.md
+│   ├── domain-model.md             # GENERATED from shared/domain/ — never hand-edited
 │   ├── adr/                        # architecture decision records, one per DEC-nn
 │   └── runbooks/
+├── shared/
+│   └── domain/                     # machine-readable domain knowledge base (ADR 0002).
+│                                   #   Master for the subject taxonomy and class levels,
+│                                   #   and the source the seed loader reads. Replaces
+│                                   #   Appendix C of document 2.
 ├── docker-compose.yml
 ├── Makefile                        # make dev / test / lint / seed / migrate
 │

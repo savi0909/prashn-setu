@@ -16,17 +16,25 @@ repos:
       - id: mixed-line-ending
         args: ["--fix=lf"]
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
-    hooks:
-      - id: ruff
-        args: [--fix]
-        files: ^backend/
-      - id: ruff-format
-        files: ^backend/
-
+  # ruff runs from backend/uv.lock, not from a pinned mirror rev. Two ruffs is
+  # one too many: the mirror was pinned at v0.8.6 while the lock resolved 0.16.2,
+  # and 0.16 changed how `assert cond, msg` wraps. Every commit was reformatted
+  # locally into a shape CI then rejected. One version of truth, upgraded by
+  # `uv lock --upgrade-package ruff` like any other dependency.
   - repo: local
     hooks:
+      - id: ruff
+        name: ruff
+        entry: uv --directory backend run ruff check --fix
+        language: system
+        files: ^backend/.*\.py$
+
+      - id: ruff-format
+        name: ruff-format
+        entry: uv --directory backend run ruff format
+        language: system
+        files: ^backend/.*\.py$
+
       - id: mypy
         name: mypy (backend)
         entry: uv --directory backend run mypy app

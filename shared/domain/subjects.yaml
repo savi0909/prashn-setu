@@ -1,0 +1,372 @@
+# Subject taxonomy — master copy (ADR 0002).
+#
+# Imported once from Appendix C of docs/02-examinations-and-syllabus.md, which
+# was a starter guide, not an authority. This file is master from that import
+# onward and is expected to grow; nothing asserts the two still agree.
+#
+# `code` is a stable identifier. Questions, blueprint sections and teacher
+# assignments all anchor to it, so renaming one silently orphans every anchor —
+# see RULE subj-004. Add codes freely; never rename or reuse one.
+#
+# `min_class_level` / `max_class_level` are the grades a subject is taught in.
+# Both NULL means "taught in no grade", which is true of the competitive-only
+# subjects at the bottom of this file and of nothing else.
+
+subjects:
+  # ------------------------------------------------------------- languages
+  - code: HINDI
+    name_en: Hindi
+    name_hi: हिन्दी
+    min_class_level: 1
+    max_class_level: 12
+    sort_order: 100
+
+  - code: ENGLISH
+    name_en: English
+    name_hi: अंग्रेज़ी
+    min_class_level: 1
+    max_class_level: 12
+    sort_order: 110
+
+  - code: SANSKRIT
+    name_en: Sanskrit
+    name_hi: संस्कृत
+    min_class_level: 6
+    max_class_level: 12
+    sort_order: 120
+
+  - code: URDU
+    name_en: Urdu
+    name_hi: उर्दू
+    min_class_level: 1
+    max_class_level: 12
+    sort_order: 130
+
+  - code: MARATHI
+    name_en: Marathi
+    name_hi: मराठी
+    min_class_level: 1
+    max_class_level: 12
+    sort_order: 140
+
+  # ----------------------------------------------------- primary and middle
+  #
+  # SCIENCE (6-10) is NOT PHYSICS + CHEMISTRY + BIOLOGY (11-12). Separate
+  # subjects, separate syllabus trees, different teacher. An MPBSE Class 10
+  # Science question is not a Physics question. See RULE subj-001 and
+  # document 2 §4.8.
+  - code: EVS
+    name_en: Environmental Studies
+    name_hi: पर्यावरण अध्ययन
+    min_class_level: 1
+    max_class_level: 5
+    sort_order: 200
+
+  - code: MATHEMATICS
+    name_en: Mathematics
+    name_hi: गणित
+    min_class_level: 1
+    max_class_level: 12
+    sort_order: 210
+
+  - code: SCIENCE
+    name_en: Science
+    name_hi: विज्ञान
+    min_class_level: 6
+    max_class_level: 10
+    sort_order: 220
+
+  - code: SOCIAL_SCIENCE
+    name_en: Social Science
+    name_hi: सामाजिक विज्ञान
+    min_class_level: 6
+    max_class_level: 10
+    sort_order: 230
+
+  # ------------------------------------------- senior secondary — science
+  - code: PHYSICS
+    name_en: Physics
+    name_hi: भौतिक विज्ञान
+    stream: SCIENCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 300
+
+  - code: CHEMISTRY
+    name_en: Chemistry
+    name_hi: रसायन विज्ञान
+    stream: SCIENCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 310
+
+  - code: BIOLOGY
+    name_en: Biology
+    name_hi: जीव विज्ञान
+    stream: SCIENCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 320
+
+  # BOTANY and ZOOLOGY are children of BIOLOGY (document 2 §4.8): NEET scores
+  # four blocks — Physics, Chemistry, Botany, Zoology — but the syllabus is
+  # published as three subjects. They exist as their own rows so a NEET
+  # blueprint section can carry a subject_id; the parent link records that the
+  # syllabus does not treat them as peers of Biology.
+  - code: BOTANY
+    name_en: Botany
+    name_hi: वनस्पति विज्ञान
+    stream: SCIENCE
+    parent: BIOLOGY
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 321
+
+  - code: ZOOLOGY
+    name_en: Zoology
+    name_hi: प्राणि विज्ञान
+    stream: SCIENCE
+    parent: BIOLOGY
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 322
+
+  - code: APPLIED_MATHEMATICS
+    name_en: Applied Mathematics
+    name_hi: अनुप्रयुक्त गणित
+    stream: SCIENCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 330
+
+  - code: COMPUTER_SCIENCE
+    name_en: Computer Science
+    name_hi: कंप्यूटर विज्ञान
+    stream: SCIENCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 340
+
+  - code: INFORMATICS_PRACTICES
+    name_en: Informatics Practices
+    name_hi: सूचना विज्ञान अभ्यास
+    stream: SCIENCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 350
+
+  - code: BIOTECHNOLOGY
+    name_en: Biotechnology
+    name_hi: जैव प्रौद्योगिकी
+    stream: SCIENCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 360
+
+  # ------------------------------------------ senior secondary — commerce
+  - code: ACCOUNTANCY
+    name_en: Accountancy
+    name_hi: लेखाशास्त्र
+    stream: COMMERCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 400
+
+  - code: BUSINESS_STUDIES
+    name_en: Business Studies
+    name_hi: व्यवसाय अध्ययन
+    stream: COMMERCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 410
+
+  - code: ECONOMICS
+    name_en: Economics
+    name_hi: अर्थशास्त्र
+    stream: COMMERCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 420
+
+  - code: ENTREPRENEURSHIP
+    name_en: Entrepreneurship
+    name_hi: उद्यमिता
+    stream: COMMERCE
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 430
+
+  # ---------------------------------------- senior secondary — humanities
+  - code: HISTORY
+    name_en: History
+    name_hi: इतिहास
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 500
+
+  - code: POLITICAL_SCIENCE
+    name_en: Political Science
+    name_hi: राजनीति विज्ञान
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 510
+
+  - code: GEOGRAPHY
+    name_en: Geography
+    name_hi: भूगोल
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 520
+
+  - code: SOCIOLOGY
+    name_en: Sociology
+    name_hi: समाजशास्त्र
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 530
+
+  - code: PSYCHOLOGY
+    name_en: Psychology
+    name_hi: मनोविज्ञान
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 540
+
+  - code: PHILOSOPHY
+    name_en: Philosophy
+    name_hi: दर्शनशास्त्र
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 550
+
+  - code: HOME_SCIENCE
+    name_en: Home Science
+    name_hi: गृह विज्ञान
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 560
+
+  - code: PHYSICAL_EDUCATION
+    name_en: Physical Education
+    name_hi: शारीरिक शिक्षा
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 570
+
+  - code: FINE_ARTS
+    name_en: Fine Arts
+    name_hi: कला
+    stream: ARTS
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 580
+
+  # -------------------------------------------------- MP Board specific
+  #
+  # Appendix C gives no class range for these; the ranges below are read from
+  # its own notes ("MPBSE XII", "MPBSE vocational") and are UNVERIFIED until
+  # checked against the MPBSE subject list.
+  - code: AGRICULTURE
+    name_en: Agriculture
+    name_hi: कृषि
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 600
+
+  - code: CROP_PRODUCTION
+    name_en: Crop Production and Horticulture
+    name_hi: फसल उत्पादन एवं उद्यान विज्ञान
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 610
+
+  - code: ANIMAL_HUSBANDRY
+    name_en: Animal Husbandry
+    name_hi: पशुपालन
+    min_class_level: 11
+    max_class_level: 12
+    sort_order: 620
+
+  # A parent node. Appendix C records the trades as children but does not
+  # enumerate them, so none are seeded yet — the hierarchy exists for when
+  # they are (MPBSE vocational is P3, so nothing before M11 reads this).
+  - code: NSQF_VOCATIONAL
+    name_en: NSQF Vocational
+    name_hi: एनएसक्यूएफ व्यावसायिक
+    min_class_level: 9
+    max_class_level: 12
+    sort_order: 630
+
+  # ------------------------------------------------- competitive-exam only
+  #
+  # No class-level teaching equivalent. These exist so competitive papers can
+  # be structured, and are hidden from the teacher-assignment picker
+  # (document 2 §4.8, document 3 §7.4). is_teachable = false is what hides
+  # them; the absent class range is the corollary, not a second switch.
+  - code: MENTAL_ABILITY
+    name_en: Mental Ability
+    name_hi: मानसिक योग्यता
+    is_teachable: false
+    sort_order: 700
+
+  - code: LOGICAL_REASONING
+    name_en: Logical Reasoning
+    name_hi: तार्किक विचारण
+    is_teachable: false
+    sort_order: 710
+
+  - code: EVERYDAY_MATHEMATICS
+    name_en: Everyday Mathematics
+    name_hi: दैनिक गणित
+    is_teachable: false
+    sort_order: 720
+
+  - code: GENERAL_KNOWLEDGE
+    name_en: General Knowledge
+    name_hi: सामान्य ज्ञान
+    is_teachable: false
+    sort_order: 730
+
+  - code: CURRENT_AFFAIRS
+    name_en: Current Affairs
+    name_hi: समसामयिकी
+    is_teachable: false
+    sort_order: 740
+
+  - code: LEGAL_REASONING
+    name_en: Legal Reasoning
+    name_hi: विधिक विचारण
+    is_teachable: false
+    sort_order: 750
+
+  - code: QUANTITATIVE_TECHNIQUES
+    name_en: Quantitative Techniques
+    name_hi: मात्रात्मक तकनीक
+    is_teachable: false
+    sort_order: 760
+
+  - code: GENERAL_TEST
+    name_en: General Test
+    name_hi: सामान्य परीक्षण
+    is_teachable: false
+    sort_order: 770
+
+  - code: ARITHMETIC
+    name_en: Arithmetic
+    name_hi: अंकगणित
+    is_teachable: false
+    sort_order: 780
+
+  - code: INTELLIGENCE
+    name_en: Intelligence
+    name_hi: बुद्धिमत्ता
+    is_teachable: false
+    sort_order: 790

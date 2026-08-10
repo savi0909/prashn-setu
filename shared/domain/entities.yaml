@@ -1,0 +1,76 @@
+# Domain vocabulary — what each entity means and what else it gets called.
+#
+# Master copy (ADR 0002). This file exists because the two taxonomies in this
+# product are easy to conflate: teachers think in grade x subject, the corpus is
+# built on examination x edition x syllabus, and they meet only where a board
+# publishes an examination. Writing both axes down keeps that seam visible.
+#
+# `aka` matters for more than documentation: the ai-gateway prompts ground on
+# these terms, and a teacher who types "standard 9" means class_level 9.
+
+version: 1
+
+entities:
+  - name: class_level
+    aka: [grade, standard, class, कक्षा]
+    definition: >
+      The school year a student is in, 1 through 12. The axis teachers describe
+      themselves along ("I teach Physics to 11th and 12th"). Keyed by the integer
+      itself, not a surrogate.
+
+  - name: subject
+    aka: [विषय]
+    definition: >
+      A teaching subject or a competitive-exam paper component. Codes are stable
+      identifiers that questions anchor to. Two subjects sharing a name at
+      different grades are still two subjects: SCIENCE (6-10) is not PHYSICS
+      (11-12).
+
+  - name: stream
+    aka: [faculty, संकाय]
+    definition: >
+      Science, Commerce or Arts. A senior-secondary concept only — it has no
+      meaning below Class 11 and is NULL there.
+
+  - name: board
+    aka: [board of education, बोर्ड]
+    definition: >
+      The body a school is affiliated to and that certifies its students —
+      MPBSE, CBSE, CISCE. Distinct from the examination it conducts.
+
+  - name: examination
+    aka: [exam, परीक्षा]
+    definition: >
+      An assessment context that owns a syllabus. Three kinds: COMPETITIVE
+      (NEET, JEE Main), BOARD_EXAM (MPBSE Class 12) and BOARD_CLASS (MPBSE
+      Class 7 — a syllabus with no official paper pattern). The third kind
+      exists because Classes 1-9 have no board exam but still need a syllabus
+      to anchor questions to. See ADR 0005.
+
+  - name: edition
+    aka: [exam year, session]
+    definition: >
+      A year-specific version of an examination, carrying its own blueprint and
+      its own syllabus tree. Generated papers pin an edition, so a mid-cycle
+      pattern change becomes a new edition rather than a destructive migration.
+
+  - name: blueprint
+    aka: [paper pattern, exam pattern, ब्लूप्रिंट]
+    definition: >
+      The structural specification of a paper — sections, question counts,
+      marks, timing. BOARD_CLASS examinations have none.
+
+  - name: syllabus_node
+    aka: [topic, chapter, unit, अध्याय]
+    definition: >
+      A node in the Subject -> Topic -> Subtopic tree, versioned with an edition
+      and addressed by an ltree materialised path.
+
+  - name: weightage
+    aka: [marks distribution, भारांक]
+    definition: >
+      Two different numbers that must never be conflated. `weightage_pct` comes
+      from a published official blueprint and is shown as "Board blueprint".
+      `empirical_weightage_pct` is computed from past papers and is shown as
+      "Observed in past papers". A derived number is never presented as
+      official.
